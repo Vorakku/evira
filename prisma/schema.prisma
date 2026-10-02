@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+  runtime = "cloudflare"
+}
+datasource db {
+  provider = "sqlite"
+}
+model User {
+  id String @id
+  email String @unique
+  name String
+  passwordHash String?
+  pinHash String?
+  phone String @default("")
+  birthDate String @default("")
+  gender String @default("")
+  avatar String @default("")
+  guest Boolean @default(true)
+  balance Int @default(937900)
+  cartVersion Int @default(0)
+  settings String @default("{}")
+  createdAt DateTime @default(now())
+  sessions Session[]
+  addresses Address[]
+  payments PaymentMethod[]
+  cart CartItem[]
+  wishlist Wishlist[]
+  orders Order[]
+  reviews Review[]
+  transactions WalletTransaction[]
+  notifications Notification[]
+  messages Message[]
+  passkeys Passkey[]
+}
+model Session {
+  id String @id
+  userId String
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+model Product {
+  id String @id
+  name String
+  category String
+  brand String
+  description String
+  price Int
+  originalPrice Int
+  stock Int @default(80)
+  sold Int @default(0)
+  rating Float @default(4.8)
+  image String
+  images String
+  sizes String
+  colors String
+  tag String @default("")
+  createdAt DateTime @default(now())
+  cart CartItem[]
+  wishlist Wishlist[]
+  reviews Review[]
+  @@index([category])
+}
+model CartItem {
+  id String @id
+  userId String
+  productId String
+  size String
+  color String
+  quantity Int
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  product Product @relation(fields:[productId],references:[id])
+  @@unique([userId,productId,size,color])
+}
+model Wishlist {
+  userId String
+  productId String
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  product Product @relation(fields:[productId],references:[id])
+  @@id([userId,productId])
+}
+model Address {
+  id String @id
+  userId String
+  label String
+  recipient String
+  phone String
+  line1 String
+  city String
+  country String
+  postalCode String
+  latitude Float @default(11.5564)
+  longitude Float @default(104.9282)
+  isDefault Boolean @default(false)
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([userId])
+}
+model PaymentMethod {
+  id String @id
+  userId String
+  brand String
+  last4 String
+  name String
+  expiry String
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([userId])
+}
+model Order {
+  id String @id
+  userId String
+  cartVersion Int
+  idempotencyKey String
+  status String
+  items String
+  subtotal Int
+  discount Int
+  shipping Int
+  total Int
+  address String
+  shippingMethod String
+  paymentMethod String
+  coupon String @default("")
+  note String @default("")
+  events String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@unique([userId,idempotencyKey])
+  @@unique([userId,cartVersion])
+  @@index([userId,createdAt])
+}
+model Review {
+  id String @id
+  userId String
+  productId String
+  rating Int
+  text String
+  likes Int @default(0)
+  likedBy String @default("[]")
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  product Product @relation(fields:[productId],references:[id],onDelete:Cascade)
+  @@unique([userId,productId])
+  @@index([productId,createdAt])
+}
+model WalletTransaction {
+  id String @id
+  userId String
+  title String
+  amount Int
+  type String
+  reference String
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@unique([userId,reference])
+  @@index([userId,createdAt])
+}
+model Notification {
+  id String @id
+  userId String
+  title String
+  text String
+  read Boolean @default(false)
+  link String @default("/")
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([userId,createdAt])
+}
+model Message {
+  id String @id
+  userId String
+  channel String @default("support")
+  text String
+  sender String
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([userId,channel,createdAt])
+}
+model AuthChallenge {
+  id String @id
+  userId String
+  type String
+  value String
+  attempts Int @default(0)
+  expiresAt DateTime
+  @@index([userId,type])
+}
+model Passkey {
+  id String @id
+  userId String
+  publicKey String
+  counter Int
+  transports String
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([userId])
+}
+model OperationGuard {
+  id String @id
+  valid Int
+}

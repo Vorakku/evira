@@ -1,0 +1,13 @@
+export type Category = 'All'|'Clothing'|'Shoes'|'Bags'|'Electronics'|'Watches'|'Eyewear'|'Jewelry'|'Toys';
+export type Product={id:string;name:string;category:Category;brand:string;description:string;price:number;originalPrice:number;stock:number;sold:number;rating:number;image:string;images:string[];sizes:string[];colors:string[];tag:string;reviewCount:number};
+export type User={id:string;email:string;name:string;phone:string;birthDate:string;gender:string;avatar:string;guest:boolean;balance:number;hasPin:boolean;hasPasskey:boolean;settings:Record<string,unknown>};
+export type CartLine={id:string;productId:string;size:string;color:string;quantity:number;product:Product};
+export type Address={id:string;label:string;recipient:string;phone:string;line1:string;city:string;country:string;postalCode:string;latitude:number;longitude:number;isDefault:boolean};
+export type PaymentMethod={id:string;brand:string;last4:string;name:string;expiry:string};
+export type OrderItem={productId:string;name:string;image:string;size:string;color:string;quantity:number;price:number};
+export type Order={id:string;status:string;items:OrderItem[];subtotal:number;discount:number;shipping:number;total:number;address:Address;shippingMethod:string;paymentMethod:string;coupon:string;note:string;events:{status:string;time:string;text:string}[];createdAt:string;updatedAt:string};
+export type WalletTransaction={id:string;title:string;amount:number;type:string;reference:string;createdAt:string};
+export type Notification={id:string;title:string;text:string;read:boolean;link:string;createdAt:string};
+export type Message={id:string;text:string;sender:string;channel:string;createdAt:string};
+export type Review={id:string;rating:number;text:string;likes:number;liked:boolean;verified:boolean;userId:string;user:{name:string;avatar:string};createdAt:string};
+export type Bootstrap={user:User;cart:CartLine[];wishlist:string[];addresses:Address[];payments:PaymentMethod[];orders:Order[];transactions:WalletTransaction[];notifications:Notification[]};
