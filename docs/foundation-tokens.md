@@ -47,6 +47,7 @@ Phase 2 deepens the light image surface to distinguish product tiles from the pa
 | `--text-display` | `clamp(2.5rem,5vw + 1rem,5rem)` |
 | `--text-h1` | `clamp(2rem,2.5vw + 1rem,3rem)` |
 | `--text-h2` | `clamp(1.5rem,1.2vw + 1rem,2rem)` |
+| `--text-h3` | `clamp(1.125rem,.4vw + 1rem,1.375rem)` |
 | `--tracking-display` | `-.065em` |
 | `--tracking-h1` | `-.045em` |
 | `--tracking-h2` | `-.035em` |
@@ -57,11 +58,14 @@ At a 16px root size, h1 resolves to 32 / 35.2 / 48px and h2 to 24 / 25.216 / 32p
 | --- | --- |
 | `--ease-out` | `cubic-bezier(0.2,0.65,0.3,1)` |
 | `--ease-spring` | `cubic-bezier(0.34,1.56,0.64,1)` |
+| `--ease-in-out` (Phase 3) | `cubic-bezier(0.77,0,0.175,1)` |
 | `--dur-fast` | `160ms` |
 | `--dur-base` | `280ms` |
 | `--dur-slow` | `600ms` |
 
 Reduced motion sets all three duration tokens to `0ms` and preserves the existing animation and transition suppression. Existing image transition durations remain unchanged; no animations were added.
+
+Phase 3 uses these shared tokens for press feedback, card hover, saved hearts, cart flights, home entrances/reveals and product image View Transitions. Home enhancement attributes are applied only after mounting; static HTML stays visible. Reduced-motion changes cancel active WAAPI feedback and reveal all content immediately. Product transitions wait for the destination gallery to commit because BrowserRouter schedules route updates asynchronously.
 
 ## Verification
 
