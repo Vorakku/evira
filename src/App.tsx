@@ -53,7 +53,7 @@ function AppRoutes(){return <Routes>
 export function App(){
   const {init,ready,error,theme,onboarded}=useApp(),location=useLocation();
   useEffect(()=>{void init()},[init]);
-  useEffect(()=>{document.documentElement.classList.toggle('dark',theme==='dark');document.documentElement.style.colorScheme=theme;document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='dark'?'#161616':'#ffffff')},[theme]);
+  useEffect(()=>{document.documentElement.classList.toggle('dark',theme==='dark');document.documentElement.style.colorScheme=theme;document.querySelector('meta[name="theme-color"]')?.setAttribute('content',getComputedStyle(document.documentElement).getPropertyValue('--background').trim())},[theme]);
   useEffect(()=>{if(ready)return registerWebTools()},[ready]);
   const independent=location.pathname==='/welcome'||location.pathname==='/story'||location.pathname==='/intro';
   // Gate before readiness: the shop never flashes behind a first visitor's tour.
